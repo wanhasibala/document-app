@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -28,9 +29,12 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::middleware('auth')->group(function(){
+Route::middleware('admin', 'verified')->group(function(){
     Route::get('/dashboard/admin', [AdminController::class,'index'])->name('admin.index');
-    Route::get('/dashboard/admin',[AdminController::class, 'edit'])->name('admin.edit');
-    
+    Route::get('/dashboard/admin/create', [AdminController::class, 'create'])->name('admin.create');
+    Route::get('/dashboard/admin/{user}/edit', [AdminController::class, 'edit'])->name('admin.edit');
+    Route::delete('/dashboard/admin/{user}', [AdminController::class, 'destroy'])->name('admin.destroy');
+    Route::post('/dashboard/admin', [AdminController::class, 'store'])->name('admin.store');
+    Route::put('/admin/users/{user}', [AdminController::class, 'update'])->name('admin.update');
 });
 require __DIR__.'/auth.php';
