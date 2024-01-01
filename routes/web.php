@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Document;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -21,13 +23,17 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $documents = Document::all();
+    return view('dashboard', compact('documents'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/create', [DocumentController::class, 'create'])->name('documents.create');
+    Route::get('/document', [DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/document', [DocumentController::class, 'store'])->name('documents.store');
 });
 Route::middleware('admin', 'verified')->group(function(){
     Route::get('/dashboard/admin', [AdminController::class,'index'])->name('admin.index');

@@ -48,25 +48,4 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::HOME);
     }
-    public function storeAdmin(Request $request)
-    {
-        // abort_if(!auth()->user()->hasRole('admin'), 403); // Check if the current user has the 'admin' role
-
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        // You may assign roles to the user if needed
-        // $user->assignRole('admin');
-
-        return redirect()->route('admin.dashboard')->with('success', 'Admin user created successfully');
-}
-}
+   }
